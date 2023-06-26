@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component } from 'react'; //!
 import { nanoid } from 'nanoid';
 import { Report } from 'notiflix/build/notiflix-report-aio';
 
@@ -8,7 +8,7 @@ import SearchFilter from 'components/SearchFIlter/SearchFIlter';
 import ContactList from 'components/ContactList/ContactList';
 import Notification from 'components/Notification/Notification';
 
-class App extends Component {
+class Apppp extends Component {
   state = {
     contacts: [],
     filter: '',
