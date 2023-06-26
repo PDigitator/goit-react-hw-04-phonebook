@@ -8,25 +8,25 @@ import SearchFilter from 'components/SearchFIlter/SearchFIlter';
 import ContactList from 'components/ContactList/ContactList';
 import Notification from 'components/Notification/Notification';
 
-const App = () => {
-  return (
-    <Container>
-      <MainTitle>Phonebook</MainTitle>
-      <ContactForm addContact={this.addContact} />
-      <Title>Contacts</Title>
-      <SearchFilter search={this.changedFilter} />
-      {contacts.length ? (
-        <ContactList
-          data={this.searchContact()}
-          deleteContact={this.deleteContact}
-        />
-      ) : (
-        <Notification message="There are no contacts in the phone book" />
-      )}
-    </Container>
-  );
-};
-class Apppp extends Component {
+// const App = () => {
+//   return (
+//     <Container>
+//       <MainTitle>Phonebook</MainTitle>
+//       <ContactForm addContact={this.addContact} />
+//       <Title>Contacts</Title>
+//       <SearchFilter search={this.changedFilter} />
+//       {contacts.length ? (
+//         <ContactList
+//           data={this.searchContact()}
+//           deleteContact={this.deleteContact}
+//         />
+//       ) : (
+//         <Notification message="There are no contacts in the phone book" />
+//       )}
+//     </Container>
+//   );
+// };
+class App extends Component {
   state = {
     contacts: [],
     filter: '',
