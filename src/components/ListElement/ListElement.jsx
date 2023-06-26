@@ -6,7 +6,7 @@ import {
   Btn,
 } from 'components/ListElement/ListElement.styled';
 
-const ListElement = ({ element: { id, name, number }, deleteContact }) => {
+const ListElement = ({ element: { name, number }, deleteContact }) => {
   return (
     <>
       <Paragraph>
@@ -19,7 +19,6 @@ const ListElement = ({ element: { id, name, number }, deleteContact }) => {
 
 ListElement.propTypes = {
   element: PropTypes.shape({
-    id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     number: PropTypes.string.isRequired,
   }).isRequired,
