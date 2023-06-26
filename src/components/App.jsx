@@ -1,6 +1,9 @@
-import { Component } from 'react'; //!
+import { useState } from 'react';
+
 import { nanoid } from 'nanoid';
 import { Report } from 'notiflix/build/notiflix-report-aio';
+
+import useLocalStorage from '../hooks/useLocalStorage';
 
 import { Container, MainTitle, Title } from 'components/App.styled';
 import ContactForm from 'components/ContactForm/ContactForm';
@@ -8,71 +11,32 @@ import SearchFilter from 'components/SearchFIlter/SearchFIlter';
 import ContactList from 'components/ContactList/ContactList';
 import Notification from 'components/Notification/Notification';
 
-// const App = () => {
-//   return (
-//     <Container>
-//       <MainTitle>Phonebook</MainTitle>
-//       <ContactForm addContact={this.addContact} />
-//       <Title>Contacts</Title>
-//       <SearchFilter search={this.changedFilter} />
-//       {contacts.length ? (
-//         <ContactList
-//           data={this.searchContact()}
-//           deleteContact={this.deleteContact}
-//         />
-//       ) : (
-//         <Notification message="There are no contacts in the phone book" />
-//       )}
-//     </Container>
-//   );
-// };
-class App extends Component {
-  state = {
-    contacts: [],
-    filter: '',
-  };
+const App = () => {
+  const [contacts, setContacts] = useLocalStorage('contacts', []);
+  const [filter, setFilter] = useState('');
 
-  componentDidMount() {
-    const contacts = localStorage.getItem('contacts');
-    const parsedContacts = JSON.parse(contacts);
-
-    if (parsedContacts) {
-      this.setState({ contacts: parsedContacts });
-    }
-  }
-
-  componentDidUpdate(_, prevState) {
-    if (this.state.contacts !== prevState.contacts) {
-      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
-    }
-  }
-
-  addContact = data => {
+  const addContact = data => {
     const newContact = {
       id: nanoid(),
       ...data,
     };
 
     if (
-      this.state.contacts.some(
+      contacts.some(
         contact => contact.name.toLowerCase() === newContact.name.toLowerCase()
       )
     ) {
       Report.info('SORRY', `${newContact.name} is already in contacts.`, 'Ok');
     } else {
-      this.setState(prevState => ({
-        contacts: [...prevState.contacts, newContact],
-      }));
+      setContacts(prevState => [...prevState, newContact]);
     }
   };
 
-  changedFilter = evt => {
-    this.setState({ filter: evt.target.value.trim() });
+  const changedFilter = evt => {
+    setFilter(evt.target.value.trim());
   };
 
-  searchContact = () => {
-    const { contacts, filter } = this.state;
-
+  const searchContact = () => {
     const normalisedFilter = filter.toLowerCase();
 
     const searchedContacts = contacts.filter(contact =>
@@ -82,32 +46,23 @@ class App extends Component {
     return searchedContacts;
   };
 
-  deleteContact = id => {
-    this.setState(prevState => ({
-      contacts: prevState.contacts.filter(element => element.id !== id),
-    }));
+  const deleteContact = id => {
+    setContacts(prevState => prevState.filter(element => element.id !== id));
   };
 
-  render() {
-    const { contacts } = this.state;
-
-    return (
-      <Container>
-        <MainTitle>Phonebook</MainTitle>
-        <ContactForm addContact={this.addContact} />
-        <Title>Contacts</Title>
-        <SearchFilter search={this.changedFilter} />
-        {contacts.length ? (
-          <ContactList
-            data={this.searchContact()}
-            deleteContact={this.deleteContact}
-          />
-        ) : (
-          <Notification message="There are no contacts in the phone book" />
-        )}
-      </Container>
-    );
-  }
-}
+  return (
+    <Container>
+      <MainTitle>Phonebook</MainTitle>
+      <ContactForm addContact={addContact} />
+      <Title>Contacts</Title>
+      <SearchFilter search={changedFilter} />
+      {contacts.length ? (
+        <ContactList data={searchContact()} deleteContact={deleteContact} />
+      ) : (
+        <Notification message="There are no contacts in the phone book" />
+      )}
+    </Container>
+  );
+};
 
 export default App;
